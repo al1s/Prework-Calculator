@@ -44,7 +44,7 @@ namespace ConsoleCalc
         }
         public static string GetAction(string expression)
         {
-            Regex regex = new Regex(@"[\+\-\\\*]");
+            Regex regex = new Regex(@"[\+-/\\*]");
             foreach (Match match in regex.Matches(
                 CleanUpInput(expression)
                 ))
