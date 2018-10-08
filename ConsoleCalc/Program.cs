@@ -57,13 +57,14 @@ namespace ConsoleCalc
         {
             string[] numbers = getOperands(str);
             int value = default(int);
-            if (numbers.Length != 2)
+            bool isEnoughOperands = numbers.Length == 2;
+            bool isValidAction = getAction(str) != string.Empty;
+            bool isValidIntegers = Int32.TryParse(numbers[0], out value) && Int32.TryParse(numbers[1], out value);
+            if (!isValidAction || !isValidIntegers || !isEnoughOperands)
             {
                 Console.WriteLine("Incorrect expression. Two integers and an action (+, -, *, /) expected. ");
-                return false;
             }
-            bool isValidAction = getAction(str) != string.Empty;
-            return Int32.TryParse(numbers[0], out value) && Int32.TryParse(numbers[1], out value);
+            return isValidIntegers && isValidAction && isEnoughOperands;
         }
 
         static int getCalcResult(string expression)
