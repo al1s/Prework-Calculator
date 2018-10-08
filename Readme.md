@@ -21,4 +21,4 @@ Output to the console the answer to the proposed math problem.
 
 ## Result app
 
-![image](https://raw.githubusercontent.com/al1s/Prework-Calculator/master/calcApp.PNG)
+![image](https://raw.githubusercontent.com/al1s/Prework-Calculator/addBasicFunctions/calcApp.PNG)
