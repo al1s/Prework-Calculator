@@ -19,7 +19,7 @@ namespace ConsoleCalc
                 userInput = Console.ReadLine();
             } while (!isValid(userInput));
             int[] numbers = convertToInt(getOperands(userInput));
-            switch (getOperator(userInput))
+            switch (getAction(userInput))
             {
                 case "+": return Add(numbers[0], numbers[1]);
                 case "-": return Sub(numbers[0], numbers[1]);
@@ -42,7 +42,7 @@ namespace ConsoleCalc
         {
             return cleanUpInput(expression).Split('+', '-', '/', '*');
         }
-        public static string getOperator(string expression)
+        public static string getAction(string expression)
         {
             Regex regex = new Regex(@"[\+\-\\\*]");
             foreach (Match match in regex.Matches(
@@ -59,9 +59,10 @@ namespace ConsoleCalc
             int value = default(int);
             if (numbers.Length != 2)
             {
-                Console.WriteLine("Incorrect expression. Two integers and an operator expected.");
+                Console.WriteLine("Incorrect expression. Two integers and an action (+, -, *, /) expected. ");
                 return false;
             }
+            bool isValidAction = getAction(str) != string.Empty;
             return Int32.TryParse(numbers[0], out value) && Int32.TryParse(numbers[1], out value);
         }
 
@@ -72,6 +73,9 @@ namespace ConsoleCalc
         static int Add(int a, int b) { return a + b; }
         static int Sub(int a, int b) { return a - b; }
         static int Mul(int a, int b) { return a * b; }
-        static int Div(int a, int b) { return a / b; }
+        static int Div(int a, int b) {
+            if (b == 0) return 0;
+            return a / b;
+        }
     }
 }
