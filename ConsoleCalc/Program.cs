@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace ConsoleCalc
 {
@@ -6,14 +7,62 @@ namespace ConsoleCalc
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Enter arithmetic expression:");
-            string input = getUserInput();
-            Console.WriteLine(getCalcResult(input));
+            Console.WriteLine("Enter arithmetic expression (ex. 2 + 3):");
+            Console.WriteLine(getUserInputAndCalc());
             Console.ReadLine();
         }
-        static string getUserInput()
+        static int getUserInputAndCalc()
         {
-            return default(String);
+            string userInput = default(string);
+            do
+            {
+                userInput = Console.ReadLine();
+            } while (!isValid(userInput));
+            int[] numbers = convertToInt(getOperands(userInput));
+            switch (getOperator(userInput))
+            {
+                case "+": return Add(numbers[0], numbers[1]);
+                case "-": return Sub(numbers[0], numbers[1]);
+                case "/": return Div(numbers[0], numbers[1]);
+                case "*": return Mul(numbers[0], numbers[1]);
+            }
+            return default(int);
+        }
+
+        static int[] convertToInt(string[] operands)
+        {
+            return new int[] {Int32.Parse(operands[0]), Int32.Parse(operands[1])};
+        }
+        public static string cleanUpInput (string expression)
+        {
+            Regex regex = new Regex(@"\s+");
+            return regex.Replace(expression, "");
+        }
+        static string[] getOperands(string expression)
+        {
+            return cleanUpInput(expression).Split('+', '-', '/', '*');
+        }
+        public static string getOperator(string expression)
+        {
+            Regex regex = new Regex(@"[\+\-\\\*]");
+            foreach (Match match in regex.Matches(
+                cleanUpInput(expression)
+                ))
+            {
+                return match.Value;
+            }
+            return string.Empty;
+        }
+        static bool isValid(string str)
+        {
+            string[] numbers = getOperands(str);
+            int value = default(int);
+            if (numbers.Length != 2)
+            {
+                Console.WriteLine("Incorrect expression. Two integers and an operator expected.");
+                return false;
+            }
+            return Int32.TryParse(numbers[0], out value) && Int32.TryParse(numbers[1], out value);
         }
 
         static int getCalcResult(string expression)
