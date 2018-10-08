@@ -56,15 +56,22 @@ namespace ConsoleCalc
         static bool IsValid(string str)
         {
             string[] numbers = GetOperands(str);
-            int value = default(int);
+            int valueA = default(int);
+            int valueB = -1;
+            string action = GetAction(str);
             bool isEnoughOperands = numbers.Length == 2;
-            bool isValidAction = GetAction(str) != string.Empty;
-            bool isValidIntegers = Int32.TryParse(numbers[0], out value) && Int32.TryParse(numbers[1], out value);
+            bool isValidAction = action != string.Empty;
+            bool isValidIntegers = Int32.TryParse(numbers[0], out valueA) && Int32.TryParse(numbers[1], out valueB);
+            bool isDivideByZero = valueB == 0 && action == "/";
             if (!isValidAction || !isValidIntegers || !isEnoughOperands)
             {
-                Console.WriteLine("Incorrect expression. Two integers and an action (+, -, *, /) expected. ");
+                Console.WriteLine("Incorrect expression. Two integers and an action (+, -, *, /) expected. Try again!");
             }
-            return isValidIntegers && isValidAction && isEnoughOperands;
+            if (isDivideByZero)
+            {
+                Console.WriteLine("Can't divide by zero. Try again!");
+            }
+            return isValidIntegers && isValidAction && isEnoughOperands && !isDivideByZero;
         }
 
         static int GetCalcResult(string expression)
@@ -74,10 +81,6 @@ namespace ConsoleCalc
         static int Add(int a, int b) { return a + b; }
         static int Sub(int a, int b) { return a - b; }
         static int Mul(int a, int b) { return a * b; }
-        static int Div(int a, int b)
-        {
-            if (b == 0) return 0;
-            return a / b;
-        }
+        static int Div(int a, int b) { return a / b; }
     }
 }
